@@ -1,0 +1,206 @@
+{
+    "name": "Franca IDL",
+    "scopeName": "source.fidl",
+    "fileTypes": [ "fidl", "fdl" ],
+    "patterns": [
+        {
+            "include": "#package"
+        },
+        {
+            "include": "#import"
+        },
+        {
+            "include": "#interface"
+        },
+        {
+            "include": "#comment"
+        }
+    ],
+    "repository": {
+
+         "package": {
+            "comment": "Package definition",
+            "match": "\\b(package)\\b\\s+(.+)",
+              "captures": {
+                "1": {"name": "keyword.control.fidl"},
+                "2": {"name": "entity.name.type.class.fidl"}
+            },
+             "name": "keyword.control.fidl"
+          },
+
+         "import": {
+            "comment": "Import definition",
+            "match": "\\b(import)\\b\\s+(.+)",
+              "captures": {
+                "1": {"name": "keyword.control.fidl"},
+                "2": {"name": "entity.name.type.class.fidl"}
+            },
+             "name": "keyword.control.fidl"
+          },
+
+         "interface": {
+            "comment": "Interface definition",
+            "begin": "\\b(interface)\\b\\s+(.+)\\s*({)",
+            "end": "}",
+              "captures": {
+                "1": {"name": "keyword.control.fidl"},
+                "2": {"name": "entity.name.type.class.fidl"},
+                "3": {"name": "punctuation.section.block"} 
+                },
+             "name": "keyword.control.fidl",
+             "patterns": [
+                {
+                    "include": "#struct"
+                },
+                {
+                    "include": "#version"
+                }
+             ]
+          },
+
+
+          "value": {
+            "comment": "",
+            "patterns": [
+              {
+                "include": "#constant"
+              }
+            ]
+        },
+
+        "constant": {
+            "match": "\\b(?:true|false|null)\\b",
+            "name": "constant.language.fidl"
+        },
+
+        "comment": {
+            "patterns": [
+              {
+                "include": "#commentblock"
+              },
+              {
+                "include": "#commentsingle"
+              },
+              {
+                "include": "#commentfidl"
+              }
+            ]
+
+        },
+
+
+      "commentblock": {
+        "comment": "C++ style comment",
+        "begin": "/\\*",
+        "captures": {
+          "1": {
+            "name": "punctuation.definition.comment.fidl"
+            }},
+        "end": "\\*/",
+        "name": "comment.block.fidl"
+      },
+
+
+      "commentsingle": {
+        "comment": "Single line comment",
+        "match": "/{2}.*",
+        "name": "comment.single.fidl"
+      },
+
+
+        "commentfidl": {
+            "begin": "(<\\*{2})",
+            "beginCaptures": {
+              "1": {
+                "name": "punctuation.definition.comment.fidl"
+                }
+                },
+            "end": "(\\*{2}>)",
+            "endCaptures": {
+              "1": {
+                "name": "punctuation.definition.comment.fidl"
+                }},
+            "name": "comment.block.fidl",
+             "patterns": [
+              {
+                "include": "#desc"
+              }
+              ]
+        },
+
+        "desc": {
+            "match": "(@description|@param)",
+            "name": "keyword.documentation.fidl"
+        },
+
+        "struct": {
+            "begin": "(struct)\\s+(.+)\\s+({)",
+            "name": "meta.class-struct-block",
+            "end": "}",
+            "captures": {
+                  "1": {
+                    "name": "storage.type"
+                    },
+                "2": {
+                    "name": "entity.name.type"
+                },
+                "3": {
+                    "name": "punctuation.section.block"
+                }
+            },
+            "patterns": [
+              {
+                "include": "#member"
+              },
+              {
+                "include": "#desc"
+              }
+              ]
+        },
+
+        "version": {
+            "begin": "(version)\\s+({)",
+            "name": "meta.class-struct-block",
+            "end": "}",
+            "captures": {
+                  "1": {
+                    "name": "storage.type"
+                    },
+                "2": {
+                    "name": "punctuation.section.block"
+                }
+            },
+            "patterns": [
+              {
+                "include": "#member"
+              }
+              ]
+        },
+
+        "member": {
+            "patterns": [
+              {
+                "include": "#type"
+              }
+            ]  
+        },
+
+        "type": {
+            "patterns": [
+              {
+                "include": "#datatype"
+              }
+            ]       
+        },
+
+
+
+
+
+        "datatype": {
+            "comment": "Types",
+            "match": "\\b(String|Float|UInt32|UInt8|array|Boolean)\\b",
+            "name": "storage.type"
+        }
+    }
+}
