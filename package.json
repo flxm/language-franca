@@ -1,0 +1,19 @@
+{
+  "name": "language-franca",
+  "version": "0.1.0",
+  "description": "Franca IDL language support in Atom",
+  "homepage": "https://github.com/flxm/language-franca",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/flxm/language-franca"
+  },
+  "author": "FeLIX",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/flxm/language-franca/issues"
+  },
+  "engines": {
+    "atom": "*",
+    "node": "*"
+  }
+}
