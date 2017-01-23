@@ -1,0 +1,10 @@
+# If you want some example snippets, check out:
+# https://github.com/atom/language-gfm/blob/master/snippets/gfm.cson
+
+'.source.fidl':
+  'Documentation':
+    'prefix': '<*'
+    'body': '<** @description ${1:description} **>'
+  'Attribute':
+    'prefix': 'att'
+    'body': 'attribute ${1:type} ${2:name}'
