@@ -13,10 +13,10 @@ Currently this package supports highlighting for
 * Numerical constants
 * String constants
 * Keywords
-** struct
-** import
-** package
-** interface
+  * struct
+  * import
+  * package
+  * interface
 
 ## Test Status
 
@@ -25,4 +25,4 @@ Currently this package supports highlighting for
 ## Future Development
 
 * Parsing of contracts
-
+* Parsing of deployment files
