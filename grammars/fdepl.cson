@@ -1,0 +1,290 @@
+name: "Franca Deployment"
+scopeName: "source.fdepl"
+fileTypes: [
+  "fdepl"
+]
+patterns: [
+  { include: "#import" }
+  { include: "#comment" }
+  { include: "#define" }
+]
+repository:
+  define:
+    comment: "Define definition"
+    begin: "\\b(define)\\b\\s*([A-Za-z\\.\\*]+)?(\\s*\\b(for)\\b)?"
+    end: "\\n"
+    captures:
+      "1": name: "keyword.control.fidl"
+      "2": name: "entity.name.type.class.fidl"
+      "3": name: "keyword.control.fidl"
+      "4": name: "keyword.control.fidl"
+    name: ""
+    patterns: [
+      { include: "#interface" }
+      { include: "#provider" }
+    ]
+
+  import:
+    comment: "Import definition"
+    begin: "\\b(import)\\b\\s*([A-Za-z\\.\\*]+)?(\\s*\\b(from)\\b)?"
+    end: "\\n"
+    captures:
+      "1": name: "keyword.control.fidl"
+      "2": name: "entity.name.type.class.fidl"
+      "3": name: "keyword.control.fidl"
+      "4": name: "keyword.control.fidl"
+    name: ""
+    patterns: [
+      { include: "#string" }
+      { include: "#comment" }
+    ]
+  interface:
+    comment: "Interface definition"
+    begin: "\\b(interface)\\b\\s*([\\w\\.]*)\\s*({?)"
+    end: "(})"
+    beginCaptures:
+      "1": name: "keyword.control.fidl"
+      "2": name: "entity.name.type.class.fidl"
+      "3": name: "punctuation.section.block.fidl"
+    endCaptures:
+      "1": name: "punctuation.section.block.fidl"
+    name: "meta.class-struct-block.fidl"
+    patterns: [
+      { include: "#comment" }
+      { include: "#method" }
+      { include: "#enumvalue" }
+    ]
+  provider:
+    comment: "Provider definition"
+    begin: "\\b(provider)\\b\\s*([\\w\\.]*)\\s*({?)"
+    end: "(})"
+    beginCaptures:
+      "1": name: "keyword.control.fidl"
+      "2": name: "entity.name.type.class.fidl"
+      "3": name: "punctuation.section.block.fidl"
+    endCaptures:
+      "1":
+        name: "punctuation.section.block.fidl"
+    name: "meta.class-struct-block.fidl"
+    patterns: [
+      { include: "#comment" }
+      { include: "#method" }
+      { include: "#enumvalue" }
+    ]
+  attribute:
+    comment: " definition"
+    begin: "\\b(attribute)\\b\\s*"
+    end: "\\n"
+    captures:
+      "1": name: "keyword.control.fidl"
+    name: ""
+    patterns: [
+      { include: "#member" }
+    ]
+  array:
+    comment: "Array definition"
+    begin: "\\b(array)\\b\\s*(.*)\\s*\\b(of?)\\b\\s*\\w?"
+    end: "\\n"
+    captures:
+      "1": name: "keyword.control.fidl"
+      "2": name: "entity.name.type.class.fidl"
+      "3": name: "keyword.control.fidl"
+      "4": name: "entity.name.type.class.fidl"
+  value:
+    comment: ""
+    patterns: [
+      { include: "#constant" }
+    ]
+  constant:
+    match: "\\b(?:NULL|null|true|false|TRUE|FALSE)\\b"
+    name: "constant.language.fidl"
+  comment:
+    patterns: [
+      { include: "#commentblock" }
+      { include: "#commentsingle" }
+      { include: "#commentfidl" }
+    ]
+  commentblock:
+    comment: "C++ style comment"
+    begin: "/\\*"
+    captures:
+      "1": name: "punctuation.definition.comment.fidl"
+    end: "\\*/"
+    name: "comment.block.fidl"
+  commentsingle:
+    comment: "Single line comment"
+    match: "/{2}.*"
+    name: "comment.single.fidl"
+  commentfidl:
+    begin: "(<\\*{2})"
+    beginCaptures:
+      "1": name: "punctuation.definition.comment.fidl"
+    end: "(\\*{2}>)"
+    endCaptures:
+      "1": name: "punctuation.definition.comment.fidl"
+    name: "comment.block.fidl"
+    patterns: [
+      { include: "#desc" }
+    ]
+  desc:
+    match: "(@description|@param|@see|returns)"
+    name: "keyword.documentation.fidl"
+  struct:
+    begin: "(struct)\\s*(\\w*)\\s*({*)"
+    name: "meta.class-struct-block"
+    end: "(})"
+    beginCaptures:
+      "1": name: "storage.type.fidl"
+      "2": name: "entity.name.type.fidl"
+      "3": name: "punctuation.section.block.fidl"
+    endCaptures:
+      "1":
+        name: "punctuation.section.block.fidl"
+    patterns: [
+      { include: "#member" }
+      { include: "#comment" }
+    ]
+  enumeration:
+    begin: "(enumeration)\\s*(\\w*)\\s*({*)"
+    name: "meta.class-struct-block"
+    end: "(})"
+    beginCaptures:
+      "1": name: "storage.type.fidl"
+      "2": name: "entity.name.type.fidl"
+      "3": name: "punctuation.section.block.fidl"
+    endCaptures:
+      "1":
+        name: "punctuation.section.block.fidl"
+    patterns: [
+      { include: "#enumvalue" }
+      { include: "#comment" }
+    ]
+  typecollection:
+    begin: "(typeCollection)\\s*(\\w*)\\s*({*)"
+    name: "meta.class-struct-block"
+    end: "(})"
+    beginCaptures:
+      "1": name: "storage.type.fidl"
+      "2": name: "entity.name.type.fidl"
+      "3": name: "punctuation.section.block.fidl"
+    endCaptures:
+      "1": name: "punctuation.section.block.fidl"
+    patterns: [
+      { include: "#typedef" }
+      { include: "#version" }
+      { include: "#enumeration" }
+      { include: "#comment" }
+      { include: "#struct" }
+    ]
+  typedef:
+    comment: "typedef definition"
+    begin: "\\b(typedef)\\b\\s*(.*)\\s*\\b(is?)\\b"
+    end: "\\n"
+    captures:
+      "1": name: "keyword.control.fidl"
+      "2": name: "entity.name.type.class.fidl"
+      "3": name: "keyword.control.fidl"
+    name: "keyword.control.fidl"
+    patterns: [
+      { include: "#type" }
+    ]
+  method:
+    begin: "(method|broadcast|instance)\\s*([\\w\.]*)\\s*({*)"
+    name: "meta.class-struct-block"
+    end: "(})"
+    beginCaptures:
+      "1": name: "storage.type.fidl"
+      "2": name: "entity.name.function.fidl"
+      "3": name: "punctuation.section.block.fidl"
+    endCaptures:
+      "1": name: "punctuation.section.block.fidl"
+    patterns: [
+      { include: "#comment" }
+      { include: "#enumvalue" }
+    ]
+  inout:
+    begin: "(in|out)\\s*({*)"
+    name: "meta.class-struct-block"
+    end: "(})"
+    beginCaptures:
+      "1": name: "storage.type.fidl"
+      "2": name: "punctuation.section.block.fidl"
+    endCaptures:
+      "1": name: "punctuation.section.block.fidl"
+    patterns: [
+      { include: "#member" }
+      { include: "#comment" }
+    ]
+  version:
+    begin: "(version)\\s*({)"
+    name: "meta.class-struct-block"
+    end: "(})"
+    beginCaptures:
+      "1": name: "storage.type.fidl"
+      "2": name: "punctuation.section.block.fidl"
+    endCaptures:
+      "1": name: "punctuation.section.block.fidl"
+    patterns: [
+      { include: "#member" }
+    ]
+  member:
+    patterns: [
+      { include: "#type" }
+      { include: "#number" }
+      { include: "#string" }
+      { include: "#constant" }
+    ]
+  enumvalue:
+    comment: "Enumvalue definition"
+    begin: "^\\s*(\\w+)(.*(=))"
+    end: "\\n"
+    captures:
+      "1": name: "entity.name.function.fidl"
+      "2": name: "keyword.operator.assignment.fidl"
+    name: ""
+    patterns: [
+      { include: "#number" }
+      { include: "#constant" }
+      { include: "#string" }
+      { include: "#comment" }
+    ]
+  type:
+    patterns: [
+      { include: "#datatype" }
+      { include: "#othertype" }
+    ]
+  datatype:
+    comment: "Types"
+    match: "\\s*\\b(Int8|Int16|Int32|UInt8|UInt16|UInt32|UInt64|Int64|Boolean|String|major|Double|Float|minor|readonly)\\b(\\[\\])?"
+    captures:
+      "1": name: "storage.type.fidl"
+      "2": name: "punctuation.bracket.square.fidl"
+    name: "storage.type.fidl"
+  othertype:
+    match: "^\\s*(\\w+)"
+    name: "entity.name.function.fidl"
+  number:
+    comment: "Numbers"
+    match: "\\s*(\\b(0[xX][0-9a-fA-F]*|0[0-7]*|[1-9][0-9]*)[uU]?(ll?|LL?)?\\b)"
+    name: "constant.numeric.integer.fidl"
+  string:
+    patterns: [
+      { include: "#stringSingle" }
+      { include: "#stringDouble" }
+    ]
+  stringSingle:
+      begin: "(\')"
+      end: "(\')"
+      name: "string.quoted.single.fidl"
+      beginCaptures: 
+        "1": name: "punctuation.fidl"
+      endCaptures:
+        "1": name: "punctuation.fidl"
+  stringDouble:
+      begin: "(\")"
+      end: "(\")"
+      name: "string.quoted.double.fidl"
+      beginCaptures: 
+        "1": name: "punctuation.fidl"
+      endCaptures:
+        "1": name: "punctuation.fidl"
