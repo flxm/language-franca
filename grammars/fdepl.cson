@@ -1,24 +1,29 @@
-name: "Franca IDL"
-scopeName: "source.fidl"
+name: "Franca Deployment"
+scopeName: "source.fdepl"
 fileTypes: [
-  "fidl"
-  "fdl"
+  "fdepl"
 ]
 patterns: [
-  { include: "#package" }
   { include: "#import" }
-  { include: "#interface" }
   { include: "#comment" }
-  { include: "#typecollection" }
+  { include: "#define" }
 ]
 repository:
-  package:
-    comment: "Package definition"
-    match: "\\b(package)\\b\\s*([\\w\.]*)"
+  define:
+    comment: "Define definition"
+    begin: "\\b(define)\\b\\s*([A-Za-z\\.\\*]+)?(\\s*\\b(for)\\b)?"
+    end: "\\n"
     captures:
       "1": name: "keyword.control.fidl"
       "2": name: "entity.name.type.class.fidl"
-    name: "keyword.control.fidl"
+      "3": name: "keyword.control.fidl"
+      "4": name: "keyword.control.fidl"
+    name: ""
+    patterns: [
+      { include: "#interface" }
+      { include: "#provider" }
+    ]
+
   import:
     comment: "Import definition"
     begin: "\\b(import)\\b\\s*([A-Za-z\\.\\*]+)?(\\s*\\b(from)\\b)?"
@@ -45,15 +50,26 @@ repository:
       "1": name: "punctuation.section.block.fidl"
     name: "meta.class-struct-block.fidl"
     patterns: [
-      { include: "#struct" }
-      { include: "#version" }
       { include: "#comment" }
       { include: "#method" }
-      { include: "#attribute" }
-      { include: "#array" }
-      { include: "#enumeration" }
-      { include: "#typecollection" }
-      { include: "#typedef" }
+      { include: "#enumvalue" }
+    ]
+  provider:
+    comment: "Provider definition"
+    begin: "\\b(provider)\\b\\s*([\\w\\.]*)\\s*({?)"
+    end: "(})"
+    beginCaptures:
+      "1": name: "keyword.control.fidl"
+      "2": name: "entity.name.type.class.fidl"
+      "3": name: "punctuation.section.block.fidl"
+    endCaptures:
+      "1":
+        name: "punctuation.section.block.fidl"
+    name: "meta.class-struct-block.fidl"
+    patterns: [
+      { include: "#comment" }
+      { include: "#method" }
+      { include: "#enumvalue" }
     ]
   attribute:
     comment: " definition"
@@ -67,17 +83,13 @@ repository:
     ]
   array:
     comment: "Array definition"
-    begin: "\\b(array)\\b\\s*(.*)\\s*\\b(of?)\\b\\s*"
+    begin: "\\b(array)\\b\\s*(.*)\\s*\\b(of?)\\b\\s*\\w?"
     end: "\\n"
     captures:
       "1": name: "keyword.control.fidl"
       "2": name: "entity.name.type.class.fidl"
       "3": name: "keyword.control.fidl"
       "4": name: "entity.name.type.class.fidl"
-    patterns: [
-      { include: "#type" }
-      { include: "#othertype" }
-    ]
   value:
     comment: ""
     patterns: [
@@ -133,15 +145,13 @@ repository:
       { include: "#comment" }
     ]
   enumeration:
-    begin: "(enumeration)\\s*(\\w*)\\s*(extends)?\\s*(\\w*)?\\s*({*)"
+    begin: "(enumeration)\\s*(\\w*)\\s*({*)"
     name: "meta.class-struct-block"
     end: "(})"
     beginCaptures:
       "1": name: "storage.type.fidl"
       "2": name: "entity.name.type.fidl"
-      "3": name: "keyword.control.fidl"
-      "4": name: "entity.name.function.fidl"
-      "5": name: "punctuation.section.block.fidl"
+      "3": name: "punctuation.section.block.fidl"
     endCaptures:
       "1":
         name: "punctuation.section.block.fidl"
@@ -165,7 +175,6 @@ repository:
       { include: "#enumeration" }
       { include: "#comment" }
       { include: "#struct" }
-      { include: "#array" }
     ]
   typedef:
     comment: "typedef definition"
@@ -180,7 +189,7 @@ repository:
       { include: "#type" }
     ]
   method:
-    begin: "(method|broadcast)\\s*(\\w*)\\s*({*)"
+    begin: "(method|broadcast|instance)\\s*([\\w\.]*)\\s*({*)"
     name: "meta.class-struct-block"
     end: "(})"
     beginCaptures:
@@ -190,8 +199,8 @@ repository:
     endCaptures:
       "1": name: "punctuation.section.block.fidl"
     patterns: [
-      { include: "#inout" }
       { include: "#comment" }
+      { include: "#enumvalue" }
     ]
   inout:
     begin: "(in|out)\\s*({*)"
@@ -227,10 +236,10 @@ repository:
     ]
   enumvalue:
     comment: "Enumvalue definition"
-    begin: "^\\s*(\\w+)(.*(=))?"
+    begin: "^\\s*(\\w+)(.*(=))"
     end: "\\n"
     captures:
-      "1": name: "entity.name.type.class.fidl"
+      "1": name: "entity.name.function.fidl"
       "2": name: "keyword.operator.assignment.fidl"
     name: ""
     patterns: [
@@ -250,7 +259,7 @@ repository:
     captures:
       "1": name: "storage.type.fidl"
       "2": name: "punctuation.bracket.square.fidl"
-    name: ""
+    name: "storage.type.fidl"
   othertype:
     match: "^\\s*(\\w+)"
     name: "entity.name.function.fidl"
