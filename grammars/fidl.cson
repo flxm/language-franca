@@ -14,7 +14,7 @@ patterns: [
 repository:
   package:
     comment: "Package definition"
-    match: "\\b(package)\\b\\s*(.*)"
+    match: "\\b(package)\\b\\s*([\\w\.]*)"
     captures:
       "1": name: "keyword.control.fidl"
       "2": name: "entity.name.type.class.fidl"
@@ -31,18 +31,18 @@ repository:
     name: ""
     patterns: [
       { include: "#string" }
+      { include: "#comment" }
     ]
   interface:
     comment: "Interface definition"
-    begin: "\\b(interface)\\b\\s*(\\w*)\\s*({?)"
+    begin: "\\b(interface)\\b\\s*([\\w\\.]*)\\s*({?)"
     end: "(})"
     beginCaptures:
       "1": name: "keyword.control.fidl"
       "2": name: "entity.name.type.class.fidl"
       "3": name: "punctuation.section.block.fidl"
     endCaptures:
-      "1":
-        name: "punctuation.section.block.fidl"
+      "1": name: "punctuation.section.block.fidl"
     name: "meta.class-struct-block.fidl"
     patterns: [
       { include: "#struct" }
@@ -53,6 +53,7 @@ repository:
       { include: "#array" }
       { include: "#enumeration" }
       { include: "#typecollection" }
+      { include: "#typedef" }
     ]
   attribute:
     comment: " definition"
@@ -66,13 +67,17 @@ repository:
     ]
   array:
     comment: "Array definition"
-    begin: "\\b(array)\\b\\s*(.*)\\s*\\b(of?)\\b\\s*\\w?"
+    begin: "\\b(array)\\b\\s*(.*)\\s*\\b(of?)\\b\\s*"
     end: "\\n"
     captures:
       "1": name: "keyword.control.fidl"
       "2": name: "entity.name.type.class.fidl"
       "3": name: "keyword.control.fidl"
       "4": name: "entity.name.type.class.fidl"
+    patterns: [
+      { include: "#type" }
+      { include: "#othertype" }
+    ]
   value:
     comment: ""
     patterns: [
@@ -107,12 +112,10 @@ repository:
       "1": name: "punctuation.definition.comment.fidl"
     name: "comment.block.fidl"
     patterns: [
-      {
-        include: "#desc"
-      }
+      { include: "#desc" }
     ]
   desc:
-    match: "(@description|@param)"
+    match: "(@description|@param|@see|returns)"
     name: "keyword.documentation.fidl"
   struct:
     begin: "(struct)\\s*(\\w*)\\s*({*)"
@@ -130,13 +133,15 @@ repository:
       { include: "#comment" }
     ]
   enumeration:
-    begin: "(enumeration)\\s*(\\w*)\\s*({*)"
+    begin: "(enumeration)\\s*(\\w*)\\s*(extends)?\\s*(\\w*)?\\s*({*)"
     name: "meta.class-struct-block"
     end: "(})"
     beginCaptures:
       "1": name: "storage.type.fidl"
       "2": name: "entity.name.type.fidl"
-      "3": name: "punctuation.section.block.fidl"
+      "3": name: "keyword.control.fidl"
+      "4": name: "entity.name.function.fidl"
+      "5": name: "punctuation.section.block.fidl"
     endCaptures:
       "1":
         name: "punctuation.section.block.fidl"
@@ -156,8 +161,11 @@ repository:
       "1": name: "punctuation.section.block.fidl"
     patterns: [
       { include: "#typedef" }
+      { include: "#version" }
+      { include: "#enumeration" }
       { include: "#comment" }
       { include: "#struct" }
+      { include: "#array" }
     ]
   typedef:
     comment: "typedef definition"
@@ -229,6 +237,7 @@ repository:
       { include: "#number" }
       { include: "#constant" }
       { include: "#string" }
+      { include: "#comment" }
     ]
   type:
     patterns: [
@@ -237,8 +246,11 @@ repository:
     ]
   datatype:
     comment: "Types"
-    match: "\\s*\\b(Int8|Int16|Int32|UInt8|UInt16|UInt32|UInt64|Int64|Boolean|String|major|Double|Float|minor|readonly)\\b"
-    name: "storage.type.fidl"
+    match: "\\s*\\b(Int8|Int16|Int32|UInt8|UInt16|UInt32|UInt64|Int64|Boolean|String|major|Double|Float|minor|readonly)\\b(\\[\\])?"
+    captures:
+      "1": name: "storage.type.fidl"
+      "2": name: "punctuation.bracket.square.fidl"
+    name: ""
   othertype:
     match: "^\\s*(\\w+)"
     name: "entity.name.function.fidl"
