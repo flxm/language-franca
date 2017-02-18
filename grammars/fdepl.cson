@@ -23,7 +23,6 @@ repository:
       { include: "#interface" }
       { include: "#provider" }
     ]
-
   import:
     comment: "Import definition"
     begin: "\\b(import)\\b\\s*([A-Za-z\\.\\*]+)?(\\s*\\b(from)\\b)?"
@@ -72,7 +71,7 @@ repository:
       { include: "#enumvalue" }
     ]
   attribute:
-    comment: " definition"
+    comment: "Attribute definition"
     begin: "\\b(attribute)\\b\\s*"
     end: "\\n"
     captures:
@@ -91,7 +90,7 @@ repository:
       "3": name: "keyword.control.fidl"
       "4": name: "entity.name.type.class.fidl"
   value:
-    comment: ""
+    comment: "Value definition"
     patterns: [
       { include: "#constant" }
     ]
@@ -99,6 +98,7 @@ repository:
     match: "\\b(?:NULL|null|true|false|TRUE|FALSE)\\b"
     name: "constant.language.fidl"
   comment:
+    comment: "Franca comments"
     patterns: [
       { include: "#commentblock" }
       { include: "#commentsingle" }
@@ -127,9 +127,11 @@ repository:
       { include: "#desc" }
     ]
   desc:
+    comment: "Keywords in comments"
     match: "(@description|@param|@see|returns)"
     name: "keyword.documentation.fidl"
   struct:
+    comment: "Struct definition"
     begin: "(struct)\\s*(\\w*)\\s*({*)"
     name: "meta.class-struct-block"
     end: "(})"
@@ -145,6 +147,7 @@ repository:
       { include: "#comment" }
     ]
   enumeration:
+    comment: "Enumeration definition"
     begin: "(enumeration)\\s*(\\w*)\\s*({*)"
     name: "meta.class-struct-block"
     end: "(})"
@@ -160,6 +163,7 @@ repository:
       { include: "#comment" }
     ]
   typecollection:
+    comment: "TypeCollection definition"
     begin: "(typeCollection)\\s*(\\w*)\\s*({*)"
     name: "meta.class-struct-block"
     end: "(})"
@@ -177,7 +181,7 @@ repository:
       { include: "#struct" }
     ]
   typedef:
-    comment: "typedef definition"
+    comment: "Typedef definition"
     begin: "\\b(typedef)\\b\\s*(.*)\\s*\\b(is?)\\b"
     end: "\\n"
     captures:
@@ -189,6 +193,7 @@ repository:
       { include: "#type" }
     ]
   method:
+    comment: "In and Out sections for methods/broadcasts"
     begin: "(method|broadcast|instance)\\s*([\\w\.]*)\\s*({*)"
     name: "meta.class-struct-block"
     end: "(})"
@@ -216,6 +221,7 @@ repository:
       { include: "#comment" }
     ]
   version:
+    comment: "Interface version definition"
     begin: "(version)\\s*({)"
     name: "meta.class-struct-block"
     end: "(})"
@@ -228,6 +234,7 @@ repository:
       { include: "#member" }
     ]
   member:
+    comment: "Variable member definition"
     patterns: [
       { include: "#type" }
       { include: "#number" }
@@ -249,12 +256,13 @@ repository:
       { include: "#comment" }
     ]
   type:
+    comment: "Type definition"
     patterns: [
       { include: "#datatype" }
       { include: "#othertype" }
     ]
   datatype:
-    comment: "Types"
+    comment: "Datatpe definitino"
     match: "\\s*\\b(Int8|Int16|Int32|UInt8|UInt16|UInt32|UInt64|Int64|Boolean|String|major|Double|Float|minor|readonly)\\b(\\[\\])?"
     captures:
       "1": name: "storage.type.fidl"
@@ -268,23 +276,26 @@ repository:
     match: "\\s*(\\b(0[xX][0-9a-fA-F]*|0[0-7]*|[1-9][0-9]*)[uU]?(ll?|LL?)?\\b)"
     name: "constant.numeric.integer.fidl"
   string:
+    comment: "String definition"
     patterns: [
       { include: "#stringSingle" }
       { include: "#stringDouble" }
     ]
   stringSingle:
-      begin: "(\')"
-      end: "(\')"
-      name: "string.quoted.single.fidl"
-      beginCaptures: 
-        "1": name: "punctuation.fidl"
-      endCaptures:
-        "1": name: "punctuation.fidl"
+    comment: "Single-quoted strings"
+    begin: "(\')"
+    end: "(\')"
+    name: "string.quoted.single.fidl"
+    beginCaptures: 
+      "1": name: "punctuation.fidl"
+    endCaptures:
+      "1": name: "punctuation.fidl"
   stringDouble:
-      begin: "(\")"
-      end: "(\")"
-      name: "string.quoted.double.fidl"
-      beginCaptures: 
-        "1": name: "punctuation.fidl"
-      endCaptures:
-        "1": name: "punctuation.fidl"
+    comment: "Double-quoted strings"
+    begin: "(\")"
+    end: "(\")"
+    name: "string.quoted.double.fidl"
+    beginCaptures: 
+      "1": name: "punctuation.fidl"
+    endCaptures:
+      "1": name: "punctuation.fidl"
