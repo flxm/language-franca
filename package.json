@@ -1,6 +1,6 @@
 {
   "name": "language-franca",
-  "version": "0.3.0",
+  "version": "0.3.1",
   "description": "Franca IDL language support in Atom",
   "homepage": "https://github.com/flxm/language-franca",
   "repository": {
